@@ -4,7 +4,7 @@ namespace App\Telegram;
 
 use App\Models\Movie;
 use App\Models\MovieAnswer;
-use App\Models\User;
+use App\Models\User1;
 use DefStudio\Telegraph\Facades\Telegraph;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
@@ -115,7 +115,7 @@ class TelegramHandler extends WebhookHandler
 
     public function getUser()
     {
-        return User::where('chat_id', $this->getChatId())->first();
+        return User1::where('chat_id', $this->getChatId())->first();
     }
 
     public function userAnswersSumm(): int
@@ -146,7 +146,7 @@ class TelegramHandler extends WebhookHandler
             )->send();
     }
 
-    protected function handleChatMemberJoined(User|\DefStudio\Telegraph\DTO\User $member): void
+    protected function handleChatMemberJoined(User1|\DefStudio\Telegraph\DTO\User $member): void
     {
         $this->chat->html("Welcome {$member->firstName()}")->send();
     }
