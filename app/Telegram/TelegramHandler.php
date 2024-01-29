@@ -17,7 +17,7 @@ class TelegramHandler extends WebhookHandler
     {
         $firstName = $this->message->from()->firstName();
 
-        $this->reply("Hi $firstName ✋");
+        $this->reply("Hi $firstName 🙌");
 
         sleep(2);
 
@@ -28,7 +28,7 @@ class TelegramHandler extends WebhookHandler
 
     public function question(int $chat_id = null): void
     {
-        $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
+        $movie = Movie::orderBy('id')->skip(0)->take(1)->first();
 
         Telegraph::photo("movies/$movie->image")
             ->html('What movie is this shot from?')
@@ -141,13 +141,9 @@ class TelegramHandler extends WebhookHandler
             ->keyboard(
                 Keyboard::make()->buttons([
                     Button::make('my portfolio')->url('https://mpetrosyan.com'),
-                    Button::make('github repository')->url('https://github.com/m-petrosyan?tab=repositories'),
+                    Button::make('project repository')->url('https://github.com/m-petrosyan/movie-telegram-bot'),
                 ])
             )->send();
     }
 
-    protected function handleChatMemberJoined(User1|\DefStudio\Telegraph\DTO\User $member): void
-    {
-        $this->chat->html("Welcome {$member->firstName()}")->send();
-    }
 }
