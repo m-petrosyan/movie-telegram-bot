@@ -31,13 +31,15 @@ class TelegramHandler extends WebhookHandler
     {
         Log::info('chatId', [$this->getChatId($chat_id)]);
 
-        $chat = User::find($this->getChatId($chat_id));
+        User::find($this->getChatId($chat_id));
 
         $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
 
         Log::info('movie', [$movie->answer->name]);
 
-        $chat->html(`<img src="movies/$movie->image">`)->send();
+        Telegraph::photo("movies/$movie->image")
+            ->html('What movie is this shot from?')
+            ->send();
 
 
         Log::info('testing', ['step1']);
