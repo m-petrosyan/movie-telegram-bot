@@ -28,7 +28,7 @@ class TelegramHandler extends WebhookHandler
 
     public function question(int $chat_id = null): void
     {
-        $movie = Movie::orderBy('id')->skip(0)->take(1)->first();
+        $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
 
         Telegraph::photo("movies/$movie->image")
             ->html('What movie is this shot from?')
@@ -140,10 +140,9 @@ class TelegramHandler extends WebhookHandler
         Telegraph::message('Menu')
             ->keyboard(
                 Keyboard::make()->buttons([
-                    Button::make('my portfolio')->url('https://mpetrosyan.com'),
-                    Button::make('project repository')->url('https://github.com/m-petrosyan/movie-telegram-bot'),
+                    Button::make('My portfolio')->url('https://mpetrosyan.com'),
+                    Button::make('Project repository')->url('https://github.com/m-petrosyan/movie-telegram-bot'),
                 ])
             )->send();
     }
-
 }
