@@ -9,6 +9,7 @@ use DefStudio\Telegraph\Facades\Telegraph;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegramHandler extends WebhookHandler
@@ -22,8 +23,8 @@ class TelegramHandler extends WebhookHandler
         sleep(2);
 
         $this->reply("The game begins 😎");
-
-        $this->question();
+        Log::info($this->getChatId());
+//        $this->question();
     }
 
     public function question(int $chat_id = null): void
