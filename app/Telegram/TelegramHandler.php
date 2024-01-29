@@ -42,9 +42,13 @@ class TelegramHandler extends WebhookHandler
     {
         $chat_id = $this->getChatId($chat_id);
 
+        Log::info('$chat_id', [$chat_id]);
+
         $currentMovieAnswer = $movie->answer;
 
         $randomUserIds = MovieAnswer::where('id', '!=', $currentMovieAnswer->id)->inRandomOrder()->take(4)->get();
+
+        Log::info('$currentMovieAnswer', [$currentMovieAnswer->id]);
 
         $randomAnswers = $randomUserIds->prepend($currentMovieAnswer)->shuffle();
 
