@@ -37,6 +37,7 @@ class TelegramHandler extends WebhookHandler
             ->html('What movie is this shot from?')
             ->send();
 
+        Log::info('testing', ['step1']);
         $this->choice($movie, $chat_id);
     }
 
