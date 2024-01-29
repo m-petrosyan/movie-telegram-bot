@@ -9,6 +9,7 @@ use DefStudio\Telegraph\Facades\Telegraph;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use DefStudio\Telegraph\Models\TelegraphChat;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
@@ -31,7 +32,7 @@ class TelegramHandler extends WebhookHandler
     {
         Log::info('chatId', [$this->getChatId($chat_id)]);
 
-        User::find($this->getChatId($chat_id));
+        TelegraphChat::find($this->getChatId($chat_id));
 
         $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
 
