@@ -29,9 +29,9 @@ class TelegramHandler extends WebhookHandler
 
     public function question(int $chat_id = null): void
     {
-        Log::info('userAnswersSumm', [$this->userAnswersSumm()]);
-
         $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
+
+        Log::info('movie', [$movie->answer->name]);
 
         Telegraph::photo("movies/$movie->image")
             ->html('What movie is this shot from?')
