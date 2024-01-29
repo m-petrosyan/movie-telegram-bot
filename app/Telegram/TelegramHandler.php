@@ -24,7 +24,7 @@ class TelegramHandler extends WebhookHandler
 
         $this->reply("The game begins 😎");
         Log::info($this->getChatId());
-//        $this->question();
+        $this->question();
     }
 
     public function question(int $chat_id = null): void
