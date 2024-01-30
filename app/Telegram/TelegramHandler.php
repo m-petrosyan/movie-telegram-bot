@@ -33,10 +33,10 @@ class TelegramHandler extends WebhookHandler
 
         Log::info('movie', [$movie->answer->name]);
 
-
-        Telegraph::chat($this->getChatId())->photo("movies/$movie->image")
+        $this->chat->photo("movies/$movie->image")
             ->html('What movie is this shot from?')
             ->send();
+    
 
         Log::info('testing', ['step1']);
         $this->choice($movie, $chat_id);
