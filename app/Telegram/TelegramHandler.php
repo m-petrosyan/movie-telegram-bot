@@ -124,8 +124,7 @@ class TelegramHandler extends WebhookHandler
     public function userAnswersSumm(): int
     {
         return $this->getChatId()
-            ? $this->getUser()->data->pluck('correct')->sum() + $this->getUser()->data->pluck('wrong')->sum(
-            ) < Movie::count()
+            ? $this->getUser()->data->correct + $this->getUser()->data->wrong < Movie::count()
             : 0;
     }
 
