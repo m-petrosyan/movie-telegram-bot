@@ -115,7 +115,7 @@ class TelegramHandler extends WebhookHandler
 
     public function getChatId(int $chat_id = null): int
     {
-        Log::info('msgID',[$this->message?->from()->id()]);
+        Log::info('msgID',[$this->messageId]);
         Log::info('chat_id',[$this->data->get('chat_id')]);
 
         return $chat_id ?? $this->message?->from()->id()  ?? $this->data->get('chat_id');
