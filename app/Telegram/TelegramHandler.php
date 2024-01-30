@@ -116,9 +116,9 @@ class TelegramHandler extends WebhookHandler
         return $chat_id ?? $this->message?->from()->id() ?? $this->messageId ?? $this->data->get('chat_id');
     }
 
-    public function getUser($chat_id)
+    public function getUser($chat_id = null)
     {
-        return User::where('chat_id', $chat_id ?? $this->getChatId())->first();
+        return User::where('chat_id', $this->getChatId($chat_id))->first();
     }
 
     public function userAnswersSumm(): int
