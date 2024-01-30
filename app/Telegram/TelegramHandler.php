@@ -70,8 +70,8 @@ class TelegramHandler extends WebhookHandler
         $wrong = $user->data->wrong;
 
         $this->reply("Correct : $correct / Wrong : $wrong");
-
-        sleep(3);
+        
+        sleep(1);
 
         $this->userAnswersSumm() < Movie::count()
             ? $this->question($this->data->get('chat_id'))

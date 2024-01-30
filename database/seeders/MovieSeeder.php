@@ -77,6 +77,38 @@ class MovieSeeder extends Seeder
                 'name' => 'The Mist',
                 'image' => 'mist.webp',
             ],
+            [
+                'name' => 'What we do in the shadows',
+                'image' => 'what_we_do.webp',
+            ],
+            [
+                'name' => "Harry Potter and the Sorcerer's Stone:",
+                'image' => 'harry_potter.webp',
+            ],
+            [
+                'name' => 'Inception',
+                'image' => 'inception.webp',
+            ],
+            [
+                'name' => 'The Thing',
+                'image' => 'thing.webp',
+            ],
+            [
+                'name' => 'The Great Gatsby',
+                'image' => 'gatsby.webp',
+            ],
+            [
+                'name' => 'Liar Liar',
+                'image' => 'liar.webp',
+            ],
+            [
+                'name' => 'Oldeuboi',
+                'image' => 'oldeuboi.webp',
+            ],
+            [
+                'name' => 'Dogville',
+                'image' => 'dogville.webp',
+            ],
         ];
 
         foreach ($movies as $movie) {
