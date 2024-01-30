@@ -8,7 +8,6 @@ use App\Models\User;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegramHandler extends WebhookHandler
@@ -22,7 +21,6 @@ class TelegramHandler extends WebhookHandler
         sleep(2);
 
         $this->reply("The game begins 😎");
-        Log::info($this->getChatId());
 
         $this->question();
     }
@@ -31,14 +29,10 @@ class TelegramHandler extends WebhookHandler
     {
         $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
 
-        Log::info('movie', [$movie->answer->name]);
-
         $this->chat->photo("movies/$movie->image")
             ->html('What movie is this shot from?')
             ->send();
 
-
-        Log::info('testing', ['step1']);
         $this->choice($movie, $chat_id);
     }
 
@@ -46,13 +40,9 @@ class TelegramHandler extends WebhookHandler
     {
         $chat_id = $this->getChatId($chat_id);
 
-        Log::info('$chat_id', [$chat_id]);
-
         $currentMovieAnswer = $movie->answer;
 
         $randomUserIds = MovieAnswer::where('id', '!=', $currentMovieAnswer->id)->inRandomOrder()->take(4)->get();
-
-        Log::info('$currentMovieAnswer', [$currentMovieAnswer->id]);
 
         $randomAnswers = $randomUserIds->prepend($currentMovieAnswer)->shuffle();
 
