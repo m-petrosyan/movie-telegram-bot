@@ -25,7 +25,7 @@ class TelegramHandler extends WebhookHandler
 
         $this->userAnswersSumm() < Movie::count()
             ? $this->question()
-            : $this->endOfTheGame($this->getChatId());
+            : $this->endOfTheGame();
 
     }
 
@@ -79,12 +79,12 @@ class TelegramHandler extends WebhookHandler
 
         $this->userAnswersSumm() < Movie::count()
             ? $this->question($this->data->get('chat_id'))
-            : $this->endOfTheGame($chat_id);
+            : $this->endOfTheGame();
     }
 
-    public function endOfTheGame($chat_id): void
+    public function endOfTheGame(): void
     {
-        $user = $this->getUser($chat_id);
+        $user = $this->getUser();
         $correct = $user->data->correct;
         $wrong = $user->data->wrong;
 
@@ -102,21 +102,21 @@ class TelegramHandler extends WebhookHandler
 
     public function reset(): void
     {
-        Log::info('2',[$this->chatid()]);
+        Log::info('2',[$this->chat->chat_id]);
         Log::info('1',[$this->getChatId()]);
 
-//        $user = $this->getUser();
-//
-//        $user->data->correct = 0;
-//        $user->data->wrong = 0;
-//        $user->data->save();
-//
-//        $this->question();
+        $user = $this->getUser();
+
+        $user->data->correct = 0;
+        $user->data->wrong = 0;
+        $user->data->save();
+
+        $this->question();
     }
 
     public function getChatId(int $chat_id = null): int
     {
-        return $chat_id ?? $this->message?->from()->id() ?? $this->data->get('chat_id');
+        return $chat_id ?? $this->chat->chat_id ?? $this->message?->from()->id() ?? $this->data->get('chat_id');
     }
 
     public function getUser($chat_id = null)
