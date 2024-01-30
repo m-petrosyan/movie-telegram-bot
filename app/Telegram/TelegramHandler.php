@@ -59,12 +59,9 @@ class TelegramHandler extends WebhookHandler
                     ->param('chat_id', $chat_id);
         }
 
-        $response = $this->chat->message('Answers')
+        $this->chat->message('Answers')
             ->keyboard(Keyboard::make()->buttons($answers)->chunk(2))
             ->send();
-
-        sleep(5);
-        $this->chat::deleteKeyboard($response->telegraphMessageId())->send();
     }
 
     public function answer(): void
