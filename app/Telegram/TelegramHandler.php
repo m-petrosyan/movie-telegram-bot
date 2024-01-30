@@ -148,4 +148,9 @@ class TelegramHandler extends WebhookHandler
                 ])
             )->send();
     }
+
+    protected function handleChatMemberJoined(User|\DefStudio\Telegraph\DTO\User $member): void
+    {
+        $this->chat->html("Welcome {$member->firstName()}")->send();
+    }
 }
