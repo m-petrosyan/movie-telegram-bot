@@ -42,7 +42,7 @@ class TelegramHandler extends WebhookHandler
 
     public function choice(object $movie, int $chat_id = null): void
     {
-        $chat_id = $this->getChatId($chat_id);
+        $chat_id = $this->getChatId();
 
         $currentMovieAnswer = $movie->answer;
 
@@ -102,9 +102,6 @@ class TelegramHandler extends WebhookHandler
 
     public function reset(): void
     {
-        Log::info('2',[$this->chat->chat_id]);
-        Log::info('1',[$this->getChatId()]);
-
         $user = $this->getUser();
 
         $user->data->correct = 0;
@@ -114,14 +111,14 @@ class TelegramHandler extends WebhookHandler
         $this->question();
     }
 
-    public function getChatId(int $chat_id = null): int
+    public function getChatId(): int
     {
-        return $chat_id ?? $this->chat->chat_id ?? $this->message?->from()->id() ?? $this->data->get('chat_id');
+        return  $this->chat->chat_id ?? $this->data->get('chat_id');
     }
 
-    public function getUser($chat_id = null)
+    public function getUser()
     {
-        return User::where('chat_id', $this->getChatId($chat_id))->first();
+        return User::where('chat_id', $this->getChatId())->first();
     }
 
     public function userAnswersSumm(): int
