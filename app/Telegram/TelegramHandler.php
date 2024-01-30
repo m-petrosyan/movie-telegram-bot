@@ -24,7 +24,12 @@ class TelegramHandler extends WebhookHandler
 
         $this->reply("The game begins 😎");
         Log::info($this->getChatId());
-        $this->question();
+
+
+        $this->chat->photo("movies/interstellar.webp")
+            ->html('What movie is this shot from?')
+            ->send();
+//        $this->question();
     }
 
     public function question(int $chat_id = null): void
@@ -36,7 +41,7 @@ class TelegramHandler extends WebhookHandler
         $this->chat->photo("movies/$movie->image")
             ->html('What movie is this shot from?')
             ->send();
-    
+
 
         Log::info('testing', ['step1']);
         $this->choice($movie, $chat_id);
@@ -65,7 +70,7 @@ class TelegramHandler extends WebhookHandler
                     ->param('chat_id', $chat_id);
         }
 
-        Telegraph::message('Answers')
+        $this->chat->message('Answers')
             ->keyboard(Keyboard::make()->buttons($answers)->chunk(2))
             ->send();
     }
