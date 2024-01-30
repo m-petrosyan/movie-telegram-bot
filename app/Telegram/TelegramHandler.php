@@ -113,7 +113,7 @@ class TelegramHandler extends WebhookHandler
 
     public function getChatId(): int
     {
-        return  $this->chat->chat_id ?? $this->data->get('chat_id');
+        return  $this->chat->chat_id;
     }
 
     public function getUser()
