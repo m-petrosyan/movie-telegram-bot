@@ -112,8 +112,10 @@ class MovieSeeder extends Seeder
         ];
 
         foreach ($movies as $movie) {
-            $move = Movie::create(['image' => $movie['image']]);
-            $move->answer()->create(['name' => $movie['name']]);
+            if (!Movie::where('image', $movie['image'])->exists()) {
+                $move = Movie::create(['image' => $movie['image']]);
+                $move->answer()->create(['name' => $movie['name']]);
+            }
         }
     }
 }
