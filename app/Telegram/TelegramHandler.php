@@ -5,7 +5,6 @@ namespace App\Telegram;
 use App\Models\Movie;
 use App\Models\MovieAnswer;
 use App\Models\User;
-use DefStudio\Telegraph\Facades\Telegraph;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
@@ -25,11 +24,7 @@ class TelegramHandler extends WebhookHandler
         $this->reply("The game begins 😎");
         Log::info($this->getChatId());
 
-
-        $this->chat->photo("movies/interstellar.webp")
-            ->html('What movie is this shot from?')
-            ->send();
-//        $this->question();
+        $this->question();
     }
 
     public function question(int $chat_id = null): void
@@ -99,11 +94,11 @@ class TelegramHandler extends WebhookHandler
         $correct = $user->data->correct;
         $wrong = $user->data->wrong;
 
-        Telegraph::message('End of the game 😉')->send();
+        $this->chat->message('End of the game 😉')->send();
 
-        Telegraph::message("Result | correct : $correct / wrong : $wrong")->send();
+        $this->chat->message("Result | correct : $correct / wrong : $wrong")->send();
 
-        Telegraph::message('Menu')
+        $this->chat->message('Menu')
             ->keyboard(
                 Keyboard::make()->buttons([
                     Button::make('Reset results and start again')->action('reset')->param('chat_id', $chat_id),
@@ -151,7 +146,7 @@ class TelegramHandler extends WebhookHandler
 
     public function info(): void
     {
-        Telegraph::message('Menu')
+        $this->chat->message('Menu')
             ->keyboard(
                 Keyboard::make()->buttons([
                     Button::make('My portfolio')->url('https://mpetrosyan.com'),
