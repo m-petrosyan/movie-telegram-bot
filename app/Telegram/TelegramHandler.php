@@ -23,8 +23,6 @@ class TelegramHandler extends WebhookHandler
 
         $this->reply("The game begins 😎");
 
-        Log::info('111',[$this->message->from()->id()]);
-
         $this->userAnswersSumm() < Movie::count()
             ? $this->question()
             : $this->endOfTheGame();
@@ -45,7 +43,6 @@ class TelegramHandler extends WebhookHandler
     public function choice(object $movie, int $chat_id = null): void
     {
         $chat_id = $this->getChatId($chat_id);
-        Log::info('msgID1',[$this->chatid()]);
 
         $currentMovieAnswer = $movie->answer;
 
@@ -67,9 +64,9 @@ class TelegramHandler extends WebhookHandler
             ->send();
     }
 
-    public function answer(): void
+    public function answer($chat_id): void
     {
-        $user = $this->getUser();
+        $user = $this->getUser($chat_id);
 
         $this->data->get('is_right') ? $user->data->increment('correct') : $user->data->increment('wrong');
 
@@ -119,9 +116,9 @@ class TelegramHandler extends WebhookHandler
         return $chat_id ?? $this->message?->from()->id() ?? $this->messageId ?? $this->data->get('chat_id');
     }
 
-    public function getUser()
+    public function getUser($chat_id)
     {
-        return User::where('chat_id', $this->getChatId())->first();
+        return User::where('chat_id', $chat_id ?? $this->getChatId())->first();
     }
 
     public function userAnswersSumm(): int
