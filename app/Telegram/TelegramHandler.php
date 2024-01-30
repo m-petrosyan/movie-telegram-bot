@@ -8,6 +8,7 @@ use App\Models\User;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegramHandler extends WebhookHandler
@@ -29,6 +30,7 @@ class TelegramHandler extends WebhookHandler
     {
         $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
 
+        Log::info('image', ["movies/$movie->image"]);
         $this->chat->photo("movies/$movie->image")
             ->html('What movie is this shot from?')
             ->send();
@@ -70,7 +72,7 @@ class TelegramHandler extends WebhookHandler
         $wrong = $user->data->wrong;
 
         $this->reply("Correct : $correct / Wrong : $wrong");
-        
+
         sleep(1);
 
         $this->userAnswersSumm() < Movie::count()
