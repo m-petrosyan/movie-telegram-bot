@@ -79,7 +79,7 @@ class TelegramHandler extends WebhookHandler
 
         $this->userAnswersSumm() < Movie::count()
             ? $this->question($this->data->get('chat_id'))
-            : $this->endOfTheGame();
+            : $this->endOfTheGame($chat_id);
     }
 
     public function endOfTheGame($chat_id): void
