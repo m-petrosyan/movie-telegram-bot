@@ -8,6 +8,8 @@ use App\Models\User;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use DefStudio\Telegraph\Keyboard\ReplyButton;
+use DefStudio\Telegraph\Keyboard\ReplyKeyboard;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
@@ -59,9 +61,12 @@ class TelegramHandler extends WebhookHandler
                     ->param('chat_id', $chat_id);
         }
 
-        $this->chat->message('Answers')
+        $response = $this->chat->message('Answers')
             ->keyboard(Keyboard::make()->buttons($answers)->chunk(2))
             ->send();
+
+        sleep(5);
+        $this->chat::deleteKeyboard($response->telegraphMessageId())->send();
     }
 
     public function answer(): void
@@ -95,7 +100,17 @@ class TelegramHandler extends WebhookHandler
         $this->chat->message('Menu')
             ->keyboard(
                 Keyboard::make()->buttons([
-                    Button::make('Reset results and start again')->action('reset')->param('chat_id', $chat_id),
+                    Button::make('Reset results and start again')->action('reset'),
+                ])
+            )->send();
+
+
+        $this->chat->message('Menu')
+            ->replyKeyboard(
+                ReplyKeyboard::make()->buttons([
+                    ReplyButton::make('Reset results and start again')->action('reset'),
+                    ReplyButton::make('bar')->requestQuiz(),
+                    ReplyButton::make('baz')->webApp('https://webapp.dev'),
                 ])
             )->send();
     }
