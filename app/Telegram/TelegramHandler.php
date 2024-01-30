@@ -102,8 +102,9 @@ class TelegramHandler extends WebhookHandler
 
     public function reset(): void
     {
-        Log::info('1',[$this->getChatId()]);
         Log::info('2',[$this->chatid()]);
+        Log::info('1',[$this->getChatId()]);
+
 //        $user = $this->getUser();
 //
 //        $user->data->correct = 0;
