@@ -29,7 +29,7 @@ class TelegramHandler extends WebhookHandler
 
     }
 
-    public function question(int $chat_id = null): void
+    public function question(): void
     {
         $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
 
@@ -37,13 +37,11 @@ class TelegramHandler extends WebhookHandler
             ->html('What movie is this shot from?')
             ->send();
 
-        $this->choice($movie, $chat_id);
+        $this->choice($movie);
     }
 
-    public function choice(object $movie, int $chat_id = null): void
+    public function choice(object $movie): void
     {
-        $chat_id = $this->getChatId();
-
         $currentMovieAnswer = $movie->answer;
 
         $randomUserIds = MovieAnswer::where('id', '!=', $currentMovieAnswer->id)->inRandomOrder()->take(4)->get();
@@ -55,8 +53,7 @@ class TelegramHandler extends WebhookHandler
         foreach ($randomAnswers as $answer) {
             $answers[] =
                 Button::make($answer->name)->action('answer')
-                    ->param('is_right', $movie->id === $answer->movie_id)
-                    ->param('chat_id', $chat_id);
+                    ->param('is_right', $movie->id === $answer->movie_id);
         }
 
         $this->chat->message('Answers')
@@ -64,9 +61,9 @@ class TelegramHandler extends WebhookHandler
             ->send();
     }
 
-    public function answer($chat_id): void
+    public function answer(): void
     {
-        $user = $this->getUser($chat_id);
+        $user = $this->getUser();
 
         $this->data->get('is_right') ? $user->data->increment('correct') : $user->data->increment('wrong');
 
