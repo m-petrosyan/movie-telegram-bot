@@ -23,15 +23,15 @@ class TelegramHandler extends WebhookHandler
 
         $this->reply("The game begins 😎");
 
-        $this->question();
+        $this->userAnswersSumm() < Movie::count()
+            ? $this->question()
+            : $this->endOfTheGame($this->getChatId());
+
     }
 
     public function question(int $chat_id = null): void
     {
         $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
-
-        Log::info('chatId', [$this->getChatId()]);
-        Log::info('image', ["movies/$movie->image"]);
 
         $this->chat->photo("movies/$movie->image")
             ->html('What movie is this shot from?')
