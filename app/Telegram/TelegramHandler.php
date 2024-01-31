@@ -62,7 +62,7 @@ class TelegramHandler extends WebhookHandler
 
         Log::info('msg', [$chat->telegraphMessageId()]);
         sleep(2);
-        $this->chat->deleteMessage($chat->telegraphMessageId());
+        $this->chat->deleteMessage($chat->telegraphMessageId())->send();
     }
 
     public function answer(): void
