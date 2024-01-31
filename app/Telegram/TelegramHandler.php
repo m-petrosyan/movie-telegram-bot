@@ -5,16 +5,16 @@ namespace App\Telegram;
 use App\Models\Movie;
 use App\Models\MovieAnswer;
 use App\Models\User;
+use DefStudio\Telegraph\Exceptions\StorageException;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
-use DefStudio\Telegraph\Models\TelegraphBot;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegramHandler extends WebhookHandler
 {
     protected int $msgId;
+
     public function start(): void
     {
         $firstName = $this->message->from()->firstName();
@@ -28,7 +28,6 @@ class TelegramHandler extends WebhookHandler
         $this->userAnswersSumm() < Movie::count()
             ? $this->question()
             : $this->endOfTheGame();
-
     }
 
     public function question(): void
@@ -42,6 +41,9 @@ class TelegramHandler extends WebhookHandler
         $this->choice($movie);
     }
 
+    /**
+     * @throws StorageException
+     */
     public function choice(object $movie): void
     {
         $currentMovieAnswer = $movie->answer;
@@ -62,12 +64,15 @@ class TelegramHandler extends WebhookHandler
             ->keyboard(Keyboard::make()->buttons($answers)->chunk(2))
             ->send();
 
-        $this->msgId = $msg->telegraphMessageId();
+        $this->chat->storage()->set('last_message', $msg->telegraphMessageId());
     }
 
+    /**
+     * @throws StorageException
+     */
     public function answer(): void
     {
-        $this->deleteMsg($this->msgId);
+        $this->deleteMsg($this->chat->storage()->get('last_message'));
 
         $user = $this->getUser();
 
@@ -118,9 +123,10 @@ class TelegramHandler extends WebhookHandler
     {
         $this->chat->deleteMessage($msgId)->send();
     }
+
     public function getChatId(): int
     {
-        return  $this->chat->chat_id;
+        return $this->chat->chat_id;
     }
 
     public function getUser()
