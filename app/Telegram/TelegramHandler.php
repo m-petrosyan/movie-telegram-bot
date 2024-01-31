@@ -30,22 +30,13 @@ class TelegramHandler extends WebhookHandler
             : $this->endOfTheGame();
     }
 
+    /**
+     * @throws StorageException
+     */
     public function question(): void
     {
         $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
 
-        $this->chat->photo("movies/$movie->image")
-            ->html('What movie is this shot from?')
-            ->send();
-
-        $this->choice($movie);
-    }
-
-    /**
-     * @throws StorageException
-     */
-    public function choice(object $movie): void
-    {
         $currentMovieAnswer = $movie->answer;
 
         $randomUserIds = MovieAnswer::where('id', '!=', $currentMovieAnswer->id)->inRandomOrder()->take(4)->get();
@@ -61,11 +52,14 @@ class TelegramHandler extends WebhookHandler
         }
 
         $msg = $this->chat->message('Answers')
+            ->photo("movies/$movie->image")
+            ->html('What movie is this shot from?')
             ->keyboard(Keyboard::make()->buttons($answers)->chunk(2))
             ->send();
 
         $this->chat->storage()->set('last_message', $msg->telegraphMessageId());
     }
+
 
     /**
      * @throws StorageException
