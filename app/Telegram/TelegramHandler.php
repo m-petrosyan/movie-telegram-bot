@@ -66,8 +66,6 @@ class TelegramHandler extends WebhookHandler
      */
     public function answer(): void
     {
-        $this->deleteMsg($this->chat->storage()->get('last_message'));
-
         $user = $this->getUser();
 
         $this->data->get('is_right') ? $user->data->increment('correct') : $user->data->increment('wrong');
@@ -77,10 +75,12 @@ class TelegramHandler extends WebhookHandler
 
         $this->reply("Correct : $correct / Wrong : $wrong");
 
-        sleep(1);
+        sleep(2);
+
+        $this->deleteMsg($this->chat->storage()->get('last_message'));
 
         $this->userAnswersSumm() < Movie::count()
-            ? $this->question($this->data->get('chat_id'))
+            ? $this->question()
             : $this->endOfTheGame();
     }
 
