@@ -51,13 +51,11 @@ class TelegramHandler extends WebhookHandler
         $randomAnswers = $randomUserIds->prepend($currentMovieAnswer)->shuffle();
 
         $answers = [];
-        $msg = null;
 
         foreach ($randomAnswers as $answer) {
             $answers[] =
                 Button::make($answer->name)->action('answer')
-                    ->param('is_right', $movie->id === $answer->movie_id)
-                    ->param('msg', $msg);
+                    ->param('is_right', $movie->id === $answer->movie_id);
         }
 
         $msg = $this->chat->message('Answers')
