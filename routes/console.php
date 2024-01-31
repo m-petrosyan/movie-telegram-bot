@@ -25,6 +25,7 @@ Artisan::command('make:menu', function () {
 
     $telegraphBot->registerCommands([
         'start' => 'for start',
-        'info' => 'for info',
+        'score' => 'get score',
+        'info' => 'get info',
     ])->send();
 });

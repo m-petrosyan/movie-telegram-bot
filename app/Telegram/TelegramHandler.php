@@ -70,10 +70,7 @@ class TelegramHandler extends WebhookHandler
 
         $this->data->get('is_right') ? $user->data->increment('correct') : $user->data->increment('wrong');
 
-        $correct = $user->data->correct;
-        $wrong = $user->data->wrong;
-
-        $this->reply("Correct : $correct / Wrong : $wrong");
+        $this->score($user);
 
         sleep(2);
 
@@ -102,6 +99,9 @@ class TelegramHandler extends WebhookHandler
             )->send();
     }
 
+    /**
+     * @throws StorageException
+     */
     public function reset(): void
     {
         $user = $this->getUser();
@@ -143,6 +143,14 @@ class TelegramHandler extends WebhookHandler
     protected function handleChatMessage(Stringable $text): void
     {
         $this->reply("I'm starting to search 🔍 '$text'");
+    }
+
+    public function score(object $user): void
+    {
+        $correct = $user->data->correct;
+        $wrong = $user->data->wrong;
+
+        $this->reply("Correct : $correct / Wrong : $wrong");
     }
 
     public function info(): void
