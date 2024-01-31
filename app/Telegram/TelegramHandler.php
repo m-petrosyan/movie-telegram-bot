@@ -60,7 +60,7 @@ class TelegramHandler extends WebhookHandler
             ->keyboard(Keyboard::make()->buttons($answers)->chunk(2))
             ->send();
 
-        Log::info('msg', [$chat->message_id]);
+        Log::info('msg', [$chat->telegraphMessageId()]);
 //        $this->chat->deleteMessage($chat->id);
     }
 
