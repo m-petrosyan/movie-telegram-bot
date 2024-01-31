@@ -8,11 +8,13 @@ use App\Models\User;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use DefStudio\Telegraph\Models\TelegraphBot;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegramHandler extends WebhookHandler
 {
+    protected int $msgId;
     public function start(): void
     {
         $firstName = $this->message->from()->firstName();
@@ -49,24 +51,26 @@ class TelegramHandler extends WebhookHandler
         $randomAnswers = $randomUserIds->prepend($currentMovieAnswer)->shuffle();
 
         $answers = [];
+        $msg = null;
 
         foreach ($randomAnswers as $answer) {
             $answers[] =
                 Button::make($answer->name)->action('answer')
-                    ->param('is_right', $movie->id === $answer->movie_id);
+                    ->param('is_right', $movie->id === $answer->movie_id)
+                    ->param('msg', $msg);
         }
 
-        $chat = $this->chat->message('Answers')
+        $msg = $this->chat->message('Answers')
             ->keyboard(Keyboard::make()->buttons($answers)->chunk(2))
             ->send();
 
-        Log::info('msg', [$chat->telegraphMessageId()]);
-        sleep(2);
-        $this->chat->deleteMessage($chat->telegraphMessageId())->send();
+        $this->msgId = $msg->telegraphMessageId();
     }
 
     public function answer(): void
     {
+        $this->deleteMsg($this->msgId);
+
         $user = $this->getUser();
 
         $this->data->get('is_right') ? $user->data->increment('correct') : $user->data->increment('wrong');
@@ -112,6 +116,10 @@ class TelegramHandler extends WebhookHandler
         $this->question();
     }
 
+    public function deleteMsg(int $msgId): void
+    {
+        $this->chat->deleteMessage($msgId)->send();
+    }
     public function getChatId(): int
     {
         return  $this->chat->chat_id;
