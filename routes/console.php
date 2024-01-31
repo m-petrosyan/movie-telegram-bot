@@ -24,7 +24,7 @@ Artisan::command('make:menu', function () {
     $telegraphBot = TelegraphBot::find(1);
 
     $telegraphBot->registerCommands([
-        'start' => 'for start',
+        'start' => 'for start0',
         'score' => 'get score',
         'info' => 'get info',
     ])->send();
