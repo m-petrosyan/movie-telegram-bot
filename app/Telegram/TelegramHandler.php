@@ -70,7 +70,7 @@ class TelegramHandler extends WebhookHandler
 
         $this->data->get('is_right') ? $user->data->increment('correct') : $user->data->increment('wrong');
 
-        $this->score($user);
+        $this->score();
 
         sleep(2);
 
@@ -145,9 +145,9 @@ class TelegramHandler extends WebhookHandler
         $this->reply("I'm starting to search 🔍 '$text'");
     }
 
-    public function score(object|null $user = null): void
+    public function score(): void
     {
-        $user = $user ?? $this->getUser();
+        $user = $this->getUser();
 
         $correct = $user->data->correct;
         $wrong = $user->data->wrong;
