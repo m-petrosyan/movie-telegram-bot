@@ -145,8 +145,10 @@ class TelegramHandler extends WebhookHandler
         $this->reply("I'm starting to search 🔍 '$text'");
     }
 
-    public function score(object $user): void
+    public function score(object $user = null): void
     {
+        $user = $user ?? $this->getUser();
+
         $correct = $user->data->correct;
         $wrong = $user->data->wrong;
 
