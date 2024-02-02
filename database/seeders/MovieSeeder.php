@@ -78,10 +78,6 @@ class MovieSeeder extends Seeder
                 'image' => 'mist.webp',
             ],
             [
-                'name' => 'What we do in the shadows',
-                'image' => 'what_we_do.webp',
-            ],
-            [
                 'name' => "Harry Potter and the Sorcerer's Stone:",
                 'image' => 'harry_potter.webp',
             ],

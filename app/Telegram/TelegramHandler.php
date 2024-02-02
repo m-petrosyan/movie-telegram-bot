@@ -9,15 +9,11 @@ use DefStudio\Telegraph\Exceptions\StorageException;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegramHandler extends WebhookHandler
 {
-    public function test(): void
-    {
-        User::where('chat_id', '1023687401')->first()->message('Բարևներ')->send();
-    }
-
     /**
      * @throws StorageException
      */
@@ -148,8 +144,7 @@ class TelegramHandler extends WebhookHandler
 
     protected function handleChatMessage(Stringable $text): void
     {
-        User::where('chat_id', '669480233')->first()->message($text)->send();
-//        $this->reply("I'm starting to search 🔍 '$text'");
+        $this->reply("I'm starting to search 🔍 '$text'");
     }
 
     public function score(): void
@@ -175,6 +170,7 @@ class TelegramHandler extends WebhookHandler
 
     protected function handleChatMemberJoined(User|\DefStudio\Telegraph\DTO\User $member): void
     {
+        Log::info('handleChatMemberJoined', $member->firstName());
         $this->chat->html("Welcome {$member->firstName()}")->send();
     }
 }
