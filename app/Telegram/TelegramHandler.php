@@ -5,6 +5,8 @@ namespace App\Telegram;
 use App\Models\Movie;
 use App\Models\MovieAnswer;
 use App\Models\User;
+use App\Repositories\MovieRepository;
+use App\Repositories\UserRepository;
 use DefStudio\Telegraph\Exceptions\StorageException;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
@@ -14,6 +16,8 @@ use Illuminate\Support\Stringable;
 
 class TelegramHandler extends WebhookHandler
 {
+    use  UserRepository, MovieRepository;
+
     /**
      * @throws StorageException
      */
@@ -37,11 +41,11 @@ class TelegramHandler extends WebhookHandler
      */
     public function question(): void
     {
-        $movie = Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();
+        $movie = $this->getCurrentMovie();
 
         $currentMovieAnswer = $movie->answer;
 
-        $randomUserIds = MovieAnswer::where('id', '!=', $currentMovieAnswer->id)->inRandomOrder()->take(4)->get();
+        $randomUserIds = $this->getRandomMovie($currentMovieAnswer->id);
 
         $randomAnswers = $randomUserIds->prepend($currentMovieAnswer)->shuffle();
 
@@ -130,12 +134,6 @@ class TelegramHandler extends WebhookHandler
         return User::where('chat_id', $this->getChatId())->first();
     }
 
-    public function userAnswersSumm(): int
-    {
-        return $this->getChatId()
-            ? $this->getUser()->data->correct + $this->getUser()->data->wrong
-            : 0;
-    }
 
     protected function handleUnknownCommand(Stringable $text): void
     {
