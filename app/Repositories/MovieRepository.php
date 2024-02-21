@@ -7,6 +7,11 @@ use App\Models\MovieAnswer;
 
 trait MovieRepository
 {
+    public function getMoviesCount()
+    {
+        return Movie::count();
+    }
+
     public function getCurrentMovie()
     {
         return Movie::orderBy('id')->skip($this->userAnswersSumm())->take(1)->first();

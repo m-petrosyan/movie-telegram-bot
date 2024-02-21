@@ -2,16 +2,12 @@
 
 namespace App\Telegram;
 
-use App\Models\Movie;
-use App\Models\MovieAnswer;
-use App\Models\User;
 use App\Repositories\MovieRepository;
 use App\Repositories\UserRepository;
 use DefStudio\Telegraph\Exceptions\StorageException;
 use DefStudio\Telegraph\Handlers\WebhookHandler;
 use DefStudio\Telegraph\Keyboard\Button;
 use DefStudio\Telegraph\Keyboard\Keyboard;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Stringable;
 
 class TelegramHandler extends WebhookHandler
@@ -31,7 +27,7 @@ class TelegramHandler extends WebhookHandler
 
         $this->reply("The game begins 😎");
 
-        $this->userAnswersSumm() < Movie::count()
+        $this->userAnswersSumm() < $this->getMoviesCount()
             ? $this->question()
             : $this->endOfTheGame();
     }
@@ -66,7 +62,6 @@ class TelegramHandler extends WebhookHandler
         $this->chat->storage()->set('last_message', $msg->telegraphMessageId());
     }
 
-
     /**
      * @throws StorageException
      */
@@ -82,7 +77,7 @@ class TelegramHandler extends WebhookHandler
 
         $this->deleteMsg($this->chat->storage()->get('last_message'));
 
-        $this->userAnswersSumm() < Movie::count()
+        $this->userAnswersSumm() < $this->getMoviesCount()
             ? $this->question()
             : $this->endOfTheGame();
     }
@@ -129,12 +124,6 @@ class TelegramHandler extends WebhookHandler
         return $this->chat->chat_id;
     }
 
-    public function getUser()
-    {
-        return User::where('chat_id', $this->getChatId())->first();
-    }
-
-
     protected function handleUnknownCommand(Stringable $text): void
     {
         $this->reply("Unknown command");
@@ -164,11 +153,5 @@ class TelegramHandler extends WebhookHandler
                     Button::make('Project repository')->url('https://github.com/m-petrosyan/movie-telegram-bot'),
                 ])
             )->send();
-    }
-
-    protected function handleChatMemberJoined(User|\DefStudio\Telegraph\DTO\User $member): void
-    {
-        Log::info('handleChatMemberJoined', $member->firstName());
-        $this->chat->html("Welcome {$member->firstName()}")->send();
     }
 }
